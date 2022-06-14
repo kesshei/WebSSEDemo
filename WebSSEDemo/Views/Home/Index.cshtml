@@ -1,0 +1,29 @@
+﻿<h>主页</h>
+<div id="result"></div>
+<script type="text/javascript">
+    if (typeof (EventSource) !== "undefined") {
+        var source = new EventSource("../home/ServerSentEvents");
+        source.onopen = function (event) {
+            console.log(source.readyState);
+            console.log(event);
+        };
+        source.onerror = function (event) {
+            console.log(source.readyState);
+            console.log(event);
+            document.getElementById("result").innerHTML += "服务关闭 <br>";
+        };
+        source.onmessage = function (event) {
+            console.log(source.readyState);
+            console.log(event);
+            document.getElementById("result").innerHTML += event.data + "<br>";
+        };
+        source.addEventListener("NewMsg", function (e) {
+            console.log("唤醒新事件");
+            console.log(e);
+            document.getElementById("result").innerHTML += e.data + "<br>";
+        });
+    }
+    else {
+        document.getElementById("result").innerHTML = "抱歉，你的浏览器不支持 server-sent 事件...";
+    }
+</script>
